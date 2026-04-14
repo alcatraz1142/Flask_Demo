@@ -37,7 +37,7 @@ def login_vulnerable():
     if not verify_password(password, db_password_hash):
         return jsonify({"error": "Invalid credentials (vulnerable)"}), 401
 
-    token = create_token(user_id, role)
+    token = create_token(user_id, db_username, role)
     return jsonify({'access_token': token, 'token_type': 'bearer'}), 200
 
 
@@ -72,7 +72,7 @@ def login_safe():
     if not verify_password(password, db_password_hash):
         return jsonify({"error": "Invalid credentials (safe)"}), 401
 
-    token = create_token(user_id, role)
+    token = create_token(user_id, db_username, role)
     return jsonify({'access_token': token, 'token_type': 'bearer'}), 200
 
 

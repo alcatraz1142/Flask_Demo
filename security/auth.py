@@ -9,10 +9,11 @@ load_dotenv()
 
 SECRET = os.getenv("JWT_SECRET", "default_secret_key")
 
-def create_token(user_id: int, role: str) -> str:
+def create_token(user_id: int, username: str, role: str) -> str:
     now = datetime.now(timezone.utc)
     payload = {
-        "sub": user_id,
+        "sub": str(user_id),
+        "username": username,
         "role": role,
         "exp": now + timedelta(minutes=15),
         "iat": now
