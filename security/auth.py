@@ -20,16 +20,6 @@ def create_token(user_id: int, role: str) -> str:
     return jwt.encode(payload, SECRET, algorithm="HS256")
 
 def verify_token(token: str):
-    auth_header = request.headers.get('Authorization')
-
-    if not auth_header:
-        return None, "Missing Authorization Header"
-
-    try:
-        token = auth_header.split(" ")[1]
-    except IndexError:
-        return None, "Invalid Authorization Header Format"
-
     try:
         decoded = jwt.decode(token, SECRET, algorithms=["HS256"])
         return decoded, None
@@ -39,8 +29,6 @@ def verify_token(token: str):
 
     except jwt.InvalidTokenError:
         return None, "Invalid Token"
-
-
 
 
 
