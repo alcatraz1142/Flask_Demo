@@ -1,3 +1,4 @@
+import logging
 from functools import wraps
 import jwt
 from flask import request, jsonify, current_app
@@ -13,6 +14,7 @@ def token_required(f):
                 token = parts[1]
 
         if not token:
+            logging.warning("Access denied: invalid or missing token")
             return jsonify({"message": "Token is missing"}), 401
 
         try:
@@ -22,6 +24,7 @@ def token_required(f):
                 algorithms=["HS256"]
             )
         except Exception:
+            logging.warning("Access denied: invalid or missing token")
             return jsonify({"message": "Token is invalid"}), 401
 
         return f(decoded, *args, **kwargs)

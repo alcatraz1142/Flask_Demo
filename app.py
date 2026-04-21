@@ -4,6 +4,7 @@ from routes.login import login_bp
 from routes.public import public_bp
 from routes.secure_routes import secure_bp
 from security.auth import SECRET
+import logging
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -30,6 +31,12 @@ def after_request(response):
 
     return response
 
+logging.basicConfig(
+    filename='security.log',
+    level = logging.INFO,
+    format = '%(asctime)s - %(levelname)s - %(message)s',
+
+)
 
 app.register_blueprint(public_bp)
 app.register_blueprint(login_bp)

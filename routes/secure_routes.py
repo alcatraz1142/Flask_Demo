@@ -1,3 +1,4 @@
+import logging
 import sqlite3
 
 from flask import Blueprint, jsonify
@@ -18,7 +19,12 @@ def secure_route(decoded_token):
 @secure_bp.route('/admin-only', methods=['GET'])
 @token_required
 def admin_only(decoded_token):
+    requester_id = decoded_token.get("username")
+    requester_role = decoded_token.get("role")
+
     if decoded_token.get("role") != "admin":
+        logging.warning(f"RBAC violation: user {requester_id} with role {requester_role} tried to access admin endpoint")
+
         return jsonify({"message": "Access denied"}), 403
 
     return jsonify({"message": "This is endpoint for admin only"})
@@ -54,6 +60,7 @@ def user_secure(decoded_token, user_id):
     requester_role = decoded_token.get("role")
 
     if requester_id != user_id and requester_role != "admin":
+        logging.warning(f"IDOR attempt: user {requester_id} tried to access {user_id}")
         return jsonify({"error": "Access denied"}), 403
 
     conn = sqlite3.connect("test.db")
