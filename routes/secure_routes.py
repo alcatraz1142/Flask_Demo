@@ -11,3 +11,15 @@ def secure_route(decoded_token):
         "user": decoded_token.get("username"),
         "role": decoded_token.get("role")
     }), 200
+
+
+@secure_bp.route('/admin-only', methods=['GET'])
+@token_required
+def admin_only(decoded_token):
+    if decoded_token.get("role") != "admin":
+        return jsonify({"message": "Access denied"}), 403
+
+    return jsonify({"message": "This is endpoint for admin only"})
+
+
+
